@@ -2,6 +2,7 @@ import User from "./model";
 import moment from "moment";
 import {
   EntryExistError,
+  EntryNotFoundError,
   AuthenticationError,
   encodeJwt,
   AuthorizationError,
@@ -44,7 +45,7 @@ export async function login(req, res, next) {
     });
 
     if (!user) {
-      throw new EntryExistError("Could not find this user");
+      throw new EntryNotFoundError("Could not find this user");
     }
 
     if (!user.isVerified) {
