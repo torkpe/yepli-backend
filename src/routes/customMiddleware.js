@@ -14,7 +14,7 @@ export async function authMiddleware(req, res, next) {
     const data = await decodeJwt(token);
 
     const user = await User.countDocuments({
-      _id: Schema.Types.ObjectId(data._id),
+      _id: data._id,
       isVerified: true
     });
 
@@ -22,7 +22,7 @@ export async function authMiddleware(req, res, next) {
       throw new NotFoundError('This account is not valid')
     }
 
-    req.user = 'data';
+    req.user = user;
 
   } catch (err) {
     next(err);
