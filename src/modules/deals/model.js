@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 
+export const DEAL_COLLECTION = 'deal'
 const deal = new Schema({
   name: {
     type: String,
@@ -11,6 +12,34 @@ const deal = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
   },
+  finance: {
+    type: Array,
+    default: [
+      {
+        key: 'Loan Request',
+        value: ''
+      },
+      {
+        key: 'Estimated Stablized Value',
+        value: ''
+      },
+      {
+        key: 'Cap Rate',
+        value: ''
+      },
+      {
+        key: 'Loan to value',
+        value: ''
+      },
+    ]
+  },
+  others: {
+    type: Array
+  },
+  images: {
+    type: [Schema.Types.String],
+    default: []
+  },
   value: {
     type: String,
     required: true,
@@ -21,10 +50,10 @@ const deal = new Schema({
     default: false,
   },
   type: {
-    type: Schema.Types.ObjectId,
+    type: Schema.Types.String,
     // required: true,
   },
-  startDate: {
+  closingDate: {
     type: Date,
     required: true,
   },
@@ -32,4 +61,4 @@ const deal = new Schema({
   timestamps: true
 });
 
-export default model('deal', deal);
+export default model(DEAL_COLLECTION, deal);

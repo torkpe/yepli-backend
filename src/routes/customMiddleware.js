@@ -22,8 +22,8 @@ export async function authMiddleware(req, res, next) {
       throw new NotFoundError('This account is not valid')
     }
 
-    req.user = user;
-
+    req.user = data;
+    return next()
   } catch (err) {
     next(err);
   }

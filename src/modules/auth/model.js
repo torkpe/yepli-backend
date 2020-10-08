@@ -3,6 +3,7 @@ import Bcrypt from 'bcryptjs';
 import moment from 'moment';
 const crypto = require('crypto');
 
+export const USER_COLLECTION = 'users';
 const user = new Schema({
   firstName: {
     type: String,
@@ -65,4 +66,4 @@ user.methods.generateToken = function() {
   return generateToken()
 };
 
-export default model('user', user);
+export default model(USER_COLLECTION, user);

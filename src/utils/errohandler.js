@@ -10,7 +10,7 @@ export function errorHandler(err, res) {
     : 500;
   if (err) {
     let message;
-    if (err.errors && err.errors[0].messages[0]) {
+    if (err.errors && err.errors[0] && err.errors[0].messages[0]) {
       message = err.errors[0].messages[0];
     } else if (err.message) {
       message = err.message;
