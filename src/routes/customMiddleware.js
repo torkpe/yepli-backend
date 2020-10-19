@@ -1,6 +1,5 @@
 import User from '../modules/auth/model';
 import {decodeJwt, NotFoundError,  InvalidTokenError} from 'iyasunday';
-import { Schema } from 'mongoose';
 
 export async function authMiddleware(req, res, next) {
   try {

@@ -1,17 +1,10 @@
 import Deal from "./model";
-import moment from "moment";
 import {
   NotFoundError
 } from "iyasunday";
 import { USER_COLLECTION } from "../auth/model";
 import mongoose from "mongoose";
 
-const cloudinary = require('cloudinary').v2;
-cloudinary.config({ 
-  cloud_name: 'hellobooks', 
-  api_key: '521381859673832', 
-  api_secret: '8c060McBdeyZClXXNfNgpG8QqXU' 
-});
 const { ObjectId } = mongoose.Types;
 
 export async function addDeal(req, res, next) {
@@ -19,7 +12,24 @@ export async function addDeal(req, res, next) {
     const { body } = req;
     body.createdBy = req.user._id;
 
-    console.log(body, '======?>')
+    body.members = [req.user._id]
+    body.finance = [{
+      key: 'Loan Request',
+      value: req.body.value,
+    },
+    {
+      key: 'Estimated Stablized Value',
+      value: ''
+    },
+    {
+      key: 'Cap Rate',
+      value: ''
+    },
+    {
+      key: 'Loan to value',
+      value: ''
+    }
+  ];
     const deal = await Deal.create(body);
 
     res.status(201).send({
@@ -28,7 +38,6 @@ export async function addDeal(req, res, next) {
       data: deal
     })
   } catch (error) {
-    console.log(error.toString())
     next(error)
   }
 }
@@ -59,7 +68,6 @@ export async function getDeals(req, res, next) {
           value: 1,
           type: 1,
           closingDate: 1,
-
         }
       }
     ]);
@@ -84,6 +92,14 @@ export async function getDeal(req, res, next) {
           isDeleted: false
         }
       },
+      {
+        $lookup: {
+          from: USER_COLLECTION,
+          foreignField: '_id',
+          localField: 'members',
+          as: 'members'
+        }
+      }
     ]);
 
     if (!deal) {
@@ -123,6 +139,31 @@ export async function updateDeal(req, res, next) {
   }
 }
 
+export async function addMember(req, res, next) {
+  try {
+    const deal = await Deal.findOneAndUpdate({
+      _id: req.params.dealId,
+      isDeleted: false
+    }, {
+      $push: {
+        members: req.body.email
+      }
+    });
+
+    if (!deal) {
+      throw new NotFoundError('Could not find this deal');
+    }
+
+    res.status(200).send({
+      data: deal,
+      success: true,
+      message: 'Successfully add member'
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function deleteDeal(req, res, next) {
   try {
     const deal = await Deal.updateOne({
@@ -156,26 +197,22 @@ export async function addImage(req, res, next) {
       throw new NotFoundError('Could not find this deal');
     }
 
-    console.log('got here')
-    const response = await cloudinary.uploader.upload(req.file.path);
-    console.log(response)
-
     await Deal.updateOne({
       _id: req.params.dealId
     }, {
       $push: {
-        images: response.secure_url
+        images: req.file.path
       }
     });
 
+    console.log(req.file.path);
     res.status(200).send({
       success: true,
-      data: response.secure_url,
+      data: req.file.path,
       message: 'Successfully added image'
     })
 
   } catch(error) {
-    console.log(error)
     next(error)
   }
 }

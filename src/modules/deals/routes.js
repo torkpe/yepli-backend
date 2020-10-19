@@ -3,8 +3,7 @@ import {validate} from 'express-validation';
 import validation from './validation';
 import * as controllers from './controllers';
 import { authMiddleware } from '../../routes/customMiddleware';
-import multer from 'multer';
-var upload = multer({ dest: 'uploads/' });
+import { upload } from '../../utils/helpers';
 
 const route = new Router();
 
@@ -44,6 +43,12 @@ route.patch(
   authMiddleware,
   upload.single('file'),
   controllers.addImage
+)
+
+route.patch(
+  '/:dealId/add-member',
+  authMiddleware,
+  controllers.addMember
 )
 
 export default route;

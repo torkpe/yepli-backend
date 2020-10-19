@@ -3,6 +3,7 @@ import { errorMessage } from 'iyasunday';
 import { ERROR } from './constants';
 
 export function errorHandler(err, res) {
+  console.log(err, '=====>>>###')
   let status = err.httpStatusCode
     ? err.httpStatusCode
     : err.status
@@ -19,7 +20,9 @@ export function errorHandler(err, res) {
     } else {
       message = 'Something went wrong';
     }
-
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      message = 'Maximum file size should not exceed 1MB';
+    }
     if (err instanceof JsonWebTokenError) {
       status = 401;
     }

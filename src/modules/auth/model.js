@@ -7,7 +7,6 @@ export const USER_COLLECTION = 'users';
 const user = new Schema({
   firstName: {
     type: String,
-    required: true,
     lowercase: true,
     trim: true
   },
@@ -19,7 +18,6 @@ const user = new Schema({
   },
   lastName: {
     type: String,
-    required: true,
     lowercase: true,
     trim: true
   },
@@ -29,14 +27,36 @@ const user = new Schema({
     lowercase: true,
     trim: true
   },
+  bio: {
+    type: String,
+    lowercase: true,
+    trim: true
+  },
+  phoneNumber: {
+    type: String,
+    lowercase: true,
+    trim: true
+  },
+  company: {
+    type: String,
+    lowercase: true,
+    trim: true
+  },
+  image: {
+    type: String,
+    lowercase: true,
+    trim: true
+  },
   password: {
     type: String,
-    required: true,
   },
   token: {
     token: String,
     expiryDate: Date
-  }
+  },
+  invitedBy: {
+    type: Schema.Types.ObjectId,
+  },
 }, {
   timestamps: true
 });

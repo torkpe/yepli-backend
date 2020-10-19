@@ -14,24 +14,6 @@ const deal = new Schema({
   },
   finance: {
     type: Array,
-    default: [
-      {
-        key: 'Loan Request',
-        value: ''
-      },
-      {
-        key: 'Estimated Stablized Value',
-        value: ''
-      },
-      {
-        key: 'Cap Rate',
-        value: ''
-      },
-      {
-        key: 'Loan to value',
-        value: ''
-      },
-    ]
   },
   others: {
     type: Array
@@ -52,6 +34,9 @@ const deal = new Schema({
   type: {
     type: Schema.Types.String,
     // required: true,
+  },
+  members: {
+    type: [Schema.Types.ObjectId]
   },
   closingDate: {
     type: Date,

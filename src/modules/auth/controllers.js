@@ -8,6 +8,7 @@ import {
   AuthorizationError,
 } from "iyasunday";
 import { sendMail } from "../../utils/mail";
+import { generateAuthToken } from "../../utils/helpers";
 
 export async function addUser(req, res, next) {
   try {
@@ -103,19 +104,6 @@ export async function verifyEmail(req, res, next) {
   } catch (error) {
     next(error);
   }
-}
-
-async function generateAuthToken(user) {
-  const token = await encodeJwt({
-    data: {
-      _id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-    },
-    secreteKey: process.env.APP_KEY,
-  });
-  return token;
 }
 
 export async function resendEmailVerificationLink(req, res, next) {
