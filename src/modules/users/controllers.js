@@ -1,7 +1,9 @@
 import { NotFoundError, ValidationError } from 'iyasunday';
 import User from '../auth/model';
 import { generateAuthToken } from '../../utils/helpers';
+import mongoose from 'mongoose';
 
+const { ObjectId } = mongoose.Types;
 
 const projection = ['image', 'email', 'firstName', 'lastName'];
 
@@ -104,6 +106,50 @@ export async function updateUserPhoto(req, res, next) {
       message: 'Successfully updated details'
     });
 
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getUsers(req, res, next) {
+  try {
+    const { searchKey } = req.query;
+    let query = {
+      _id: {$ne: ObjectId(req.user._id)},
+      isVerified: true
+    };
+
+    if (searchKey) {
+      query = {
+        ...query,
+        $or: [
+          { "firstName": new RegExp(searchKey, "i") },
+          { "lastName": new RegExp(searchKey, "i") },
+          { "email": new RegExp(searchKey, "i") },
+        ]
+      }
+    }
+
+    const users = await User.aggregate([
+      {
+        $match: query
+      },
+      {
+        $project: {
+          image: 1,
+          email: 1,
+          firstName: 1,
+          lastName: 1,
+          phoneNumber: 1,
+          company: 1,
+        }
+      }
+    ]);
+
+    return res.status(200).send({
+      succes: true,
+      data: users,
+    })
   } catch (error) {
     next(error);
   }

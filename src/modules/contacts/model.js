@@ -22,19 +22,16 @@ const contact = new Schema({
   },
   phoneNumber: {
     type: String,
-    required: true,
     lowercase: true,
     trim: true
   },
   address: {
     type: String,
-    required: true,
     lowercase: true,
     trim: true
   },
   company: {
     type: String,
-    required: true,
     lowercase: true,
     trim: true
   },

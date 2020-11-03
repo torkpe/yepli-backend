@@ -146,7 +146,7 @@ export async function addMember(req, res, next) {
       isDeleted: false
     }, {
       $push: {
-        members: req.body.email
+        members: req.body.userId
       }
     });
 

@@ -13,6 +13,12 @@ route.get(
   controllers.getUserDetails
 );
 
+route.get(
+  '/search',
+  authMiddleware,
+  controllers.getUsers
+);
+
 route.patch(
   '/',
   validate(validation.updateUserDetails),
