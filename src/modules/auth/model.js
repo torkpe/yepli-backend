@@ -27,7 +27,7 @@ const user = new Schema({
     lowercase: true,
     trim: true
   },
-  bio: {
+  category: {
     type: String,
     lowercase: true,
     trim: true
@@ -37,7 +37,7 @@ const user = new Schema({
     lowercase: true,
     trim: true
   },
-  company: {
+  location: {
     type: String,
     lowercase: true,
     trim: true

@@ -22,6 +22,7 @@ export async function authMiddleware(req, res, next) {
     }
 
     req.user = data;
+    console.log(req.user)
     return next()
   } catch (err) {
     next(err);

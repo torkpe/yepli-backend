@@ -55,7 +55,7 @@ export async function generateAuthToken(user) {
       email: user.email,
       image: user.image ? user.image : '',
     },
-    secreteKey: process.env.APP_KEY,
+    secreteKey: process.env.APP_KEY
   });
   return token;
 }
