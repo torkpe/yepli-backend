@@ -14,7 +14,7 @@ connect()
     middleware(app);    
     route(app)
     const server = http.createServer(app);
-    socketServer(server);
+    // socketServer(server);
     server.listen(process.env.PORT || 4000, (err) => {
       if (err) {
         console.log(err.toString());
