@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-export const DEAL_COLLECTION = 'deal'
+export const DEAL_COLLECTION = 'deals'
 const deal = new Schema({
   name: {
     type: String,

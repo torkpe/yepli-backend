@@ -8,19 +8,18 @@ const cloudinary = require('cloudinary').v2;
 cloudinary.config({ 
   cloud_name: 'hellobooks', 
   api_key: '521381859673832', 
-  api_secret: '8c060McBdeyZClXXNfNgpG8QqXU',
+  api_secret: '8c060McBdeyZClXXNfNgpG8QqXU'
 });
 
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
+  cloudinary,
   params: {
     folder: 'yepli',
-    format: 'png', // supports promises as well
     public_id: (req, file) => Date.now(),
   },
 });
 
-const allowedFormat = ['jpeg', 'jpg', 'png', 'gif'];
+const allowedFormat = ['jpeg', 'jpg', 'png', 'gif', 'pdf', 'xls', 'xlsx', 'doc', 'docx'];
 const fileFilter = (req, file, cb) => {
   const fileFormat = file.originalname
     .split('.')
@@ -55,7 +54,7 @@ export async function generateAuthToken(user) {
       email: user.email,
       image: user.image ? user.image : '',
     },
-    secreteKey: process.env.APP_KEY,
+    secreteKey: process.env.APP_KEY
   });
   return token;
 }

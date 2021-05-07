@@ -4,6 +4,8 @@ import {
 } from "iyasunday";
 import { USER_COLLECTION } from "../auth/model";
 import mongoose from "mongoose";
+import Section from '../section/model';
+import Task from '../tasks/model';
 
 const { ObjectId } = mongoose.Types;
 
@@ -32,6 +34,24 @@ export async function addDeal(req, res, next) {
   ];
     const deal = await Deal.create(body);
 
+    const { sections } = body;
+
+    if (sections.length) {
+      await Promise.all(sections.map(async (section) => {
+        section.dealId = deal._id;
+        const createdSection = await Section.create(section);
+        if (section.checklists.length) {
+          await Promise.all(section.checklists.map(async (checklist) => {
+            checklist.sectionId = createdSection._id;
+            checklist.dealId = deal._id;
+            checklist.title = checklist.name;
+            checklist.isAddedToChecklist = true
+            checklist.createdBy = req.user._id;
+            await Task.create(checklist);
+          }))
+        }
+      }))
+    }
     res.status(201).send({
       success: true,
       message: 'Successfully created deal',
@@ -47,8 +67,12 @@ export async function getDeals(req, res, next) {
     const deals = await Deal.aggregate([
       {
         $match: {
-          createdBy: ObjectId(req.user._id),
-          isDeleted: false
+          isDeleted: false,
+          $or: [{
+            createdBy: ObjectId(req.user._id),
+          }, {
+            members: ObjectId(req.user._id)
+          }]
         }
       },
       {
@@ -59,6 +83,7 @@ export async function getDeals(req, res, next) {
           as: 'createdBy'
         }
       },
+
       {$unwind: '$createdBy'},
       {
         $project: {
@@ -66,7 +91,7 @@ export async function getDeals(req, res, next) {
           createdBy: 1,
           images: 1,
           value: 1,
-          type: 1,
+          typeId: 1,
           closingDate: 1,
         }
       }
